@@ -1,6 +1,8 @@
 let stred = [2, 2]
 led.plotBrightness(stred[0], stred[1], 155)
-let rucicka = [[2, 1], [2, 0]]
+let a = false
+let b = false
+let rucicka = [[2, 0], [2, 1]]
 function rozsvitBody() {
     basic.clearScreen()
     led.plotBrightness(stred[0], stred[1], 155)
@@ -11,22 +13,42 @@ function rozsvitBody() {
 
 rozsvitBody()
 function otoc(vpravo: boolean) {
+    let uhel: number;
     let tempNula: number;
+    if (vpravo) {
+        uhel = 0.785398163
+    } else {
+        uhel = 5.49778714
+    }
+    
     for (let i = 0; i < 2; i++) {
         tempNula = rucicka[i][0]
-        if (vpravo) {
-            rucicka[i][0] = 0.70710678118 * (rucicka[i][0] - stred[0] - rucicka[i][1] + stred[1]) + stred[0]
-            rucicka[i][1] = 0.70710678118 * (tempNula - stred[0] + rucicka[i][1] - stred[1]) + stred[1]
-            console.logValue("0", rucicka[i][0])
-            console.logValue("1", rucicka[i][1])
-        } else {
-            
-        }
-        
+        rucicka[i][0] = Math.cos(uhel) * (rucicka[i][0] - stred[0]) - Math.sin(uhel) * (rucicka[i][1] - stred[1]) + stred[0]
+        rucicka[i][1] = Math.sin(uhel) * (tempNula - stred[0]) + Math.cos(uhel) * (rucicka[i][1] - stred[1]) + stred[1]
+        console.logValue("0", rucicka[i][0])
+        console.logValue("1", rucicka[i][1])
     }
     rozsvitBody()
 }
 
 input.onButtonPressed(Button.A, function on_button_pressed_a() {
-    otoc(true)
+    
+    a = true
+    b = false
+})
+input.onButtonPressed(Button.B, function on_button_pressed_b() {
+    
+    a = false
+    b = true
+})
+forever(function on_forever() {
+    if (a) {
+        otoc(true)
+    }
+    
+    if (b) {
+        otoc(false)
+    }
+    
+    basic.pause(100)
 })
